@@ -18,4 +18,8 @@ data:
 
 
 computations:
-  dt: 0.1
+  dt:
+    minutes: 1
+    seconds: 30
+  starttime: "2010-02-11 00:00:00"
+
