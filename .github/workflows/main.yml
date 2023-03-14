@@ -1,0 +1,22 @@
+on:
+  push:
+    branches:
+    - main
+    - release/*
+
+jobs:
+  build_latex:
+    name: Build_latex
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install texlive
+      run: |
+        apt install texlive-latex-extra
+    - name: Build latex
+      run: |
+        pdflatex ./latex/main.tex
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: build
+        path: ./main.pdf
