@@ -5,6 +5,9 @@ __pycache__/
 
 .vscode
 data/
+# LATEX
+*.aux
+*.pdf
 
 # C extensions
 *.so
