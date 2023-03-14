@@ -1,16 +1,15 @@
 import mesa
-from agent_based.schedulers.concurent_scheduler import SimpleMPScheduler
+import datetime
 from agent_based.agents.pv_farm import PVAgent
+import pandas as pd
 
-
-class Model(mesa.Model):
-    def __init__(self, number_of_agents: int, dt: float):
+class ModelV1(mesa.Model):
+    def __init__(self, wind: pd.DataFrame, pv: pd.DataFrame, start_time: datetime, dt: datetime.timedelta):
         super().__init__(self)
         self.dt = dt
-        self.time = 0
-        self.scheduler = SimpleMPScheduler(self)
-        for i in range(number_of_agents):
-            self.scheduler.add(PVAgent(self.next_id(), self))
+        self.time = start_time
+        self.scheduler = mesa.time.RandomActivation(self)
+        wind_array = wind.to_dict(orient="list")
 
     def step(self):
         """Advance the model by one step."""

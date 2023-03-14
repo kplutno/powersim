@@ -1,0 +1,21 @@
+---
+
+data:
+  res_list:
+    path: "./data/res-list.XLSX"
+    columns_final:
+    - "lp"
+    - "rodzaj"
+    - "woje"
+    - "powiat"
+    - "moc"
+    columns_rename:
+      "Lp." : "lp"
+      "Rodzaj OZE" : "rodzaj"
+      "Województwo" : "woje"
+      "Powiat" : "powiat"
+      "Moc zainstalowana [MW]" : "moc"
+
+
+computations:
+  dt: 0.1
