@@ -1,29 +1,39 @@
-\documentclass[12pt, letterpaper]{article}
-\usepackage{graphicx}
-\usepackage[T1]{fontenc}
-\usepackage[polish]{babel}
-\usepackage[utf8]{inputenc}
+\documentclass{pracamgr}
 
+\autor{Krzysztof Płuciennik}{419394}
 
-\title{Praca Magisterska}
-\author{Krzysztof Płuciennik}
+\title{Tytuł}
+
+\tytulang{Eng title}
+
+\kierunek{Inżynieria Obliczeniowa}
+
+\opiekun{Promotor
+  }
+
 \date{Marzec 2023}
 
+\keywords{}
+
 \begin{document}
+
 \maketitle
 
 \begin{abstract}
-    Tutaj będzie Abstract.
+    Tutaj będzie abstract.
 \end{abstract}
 
-\section{Wstęp}
+\tableofcontents
 
-Hello there
+\chapter*{Wprowadzenie}
+\addcontentsline{toc}{chapter}{Wprowadzenie}
 
-\section{Introduction}
+    Wprowadzenie.
 
 
-Hello there
+\begin{thebibliography}{99}
+\addcontentsline{toc}{chapter}{Bibliografia}
 
+\end{thebibliography}
 
 \end{document}
