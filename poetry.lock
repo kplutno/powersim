@@ -238,6 +238,20 @@ pyyaml = ">=5.3.1"
 requests = ">=2.23.0"
 
 [[package]]
+name = "gdal"
+version = "3.6.3"
+description = "GDAL: Geospatial Data Abstraction Library"
+category = "main"
+optional = false
+python-versions = ">=3.6.0"
+files = [
+    {file = "GDAL-3.6.3.tar.gz", hash = "sha256:04c823af114966ebc59aba66fcc64eaa828a05ba2aeedbd6f7cde30037e0ef67"},
+]
+
+[package.extras]
+numpy = ["numpy (>1.0.0)"]
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -753,4 +767,4 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "ab8d8802f5e1b30a3ffc9513a48f5e83fefee982e990f6325646de0550df6082"
+content-hash = "1718f8aaaea325385907b4743a100996e921a738d2236d398320abaa842c9392"

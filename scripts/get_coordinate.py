@@ -1,7 +1,5 @@
+import os
 
 if __name__ == "__main__":
-    headers = {
-    'Authorization': 'Token {}'.format(api_key) 
-    }
-    
-    
+    api_key = os.environ["METEO_API_KEY"]
+    headers = {"Authorization": "Token {}".format(api_key)}
