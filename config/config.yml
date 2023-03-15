@@ -27,6 +27,10 @@ data:
       - "moc"
       - "lon"
       - "lat"
+  
+  topo_data:
+    path: "./data/clean_topo"
+    wind: "Twt"
 
 computations:
   dt:
