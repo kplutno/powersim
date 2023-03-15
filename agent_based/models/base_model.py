@@ -22,9 +22,11 @@ class ModelV1(mesa.Model):
             self.dt = deltatime
             self.time = starttime
         else:
-            self.time_list = iter(time_list)
-            self.time = next(self.time_list)
-        
+            self.time_list = time_list
+            self.starttime = time_list[0]
+            self.dt = time_list[1] - time_list[0]            
+            self.time = self.starttime
+
         self.scheduler = mesa.time.RandomActivation(self)
 
         for index, wind_turbine in wind.iterrows():
@@ -51,9 +53,6 @@ class ModelV1(mesa.Model):
 
     def step(self):
         # Timestep
-        if self.starttime is None:
-            self.time = next(self.time_list)
-        else:
-            self.starttime += self.dt
+        self.time += self.dt
         
         self.scheduler.step()
