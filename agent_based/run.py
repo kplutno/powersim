@@ -1,6 +1,5 @@
 from agent_based.models.base_model import ModelV1
 from utils.process import process_ure_rse_source, load_config, load_clean_res_data
-import datetime
 
 if __name__ == "__main__":
     config_file = "./config/config.yml"
