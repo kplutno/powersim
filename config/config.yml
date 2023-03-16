@@ -29,7 +29,8 @@ data:
       - "lat"
   
   topo_data:
-    path: "./data/clean_topo"
+    input_path: "./data/topo"
+    output_path: "./data/clean_topo"
     wind: "Twt"
 
 computations:

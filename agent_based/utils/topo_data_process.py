@@ -1,13 +1,10 @@
-import geopandas
-import pandas as pd
 import os
+import geopandas
 
-if __name__=="__main__":
-    path = "./data/topograficzne"
-    output_path = "./data/clean_topo"
+def process_topo(config):
+    path = config.data.topo_data.input_path
+    output_path = config.data.topo_data.output_path
     list_of_dir = os.listdir(path)
-    
-    dataframes = []
     
     for dir in list_of_dir:
         inner_path = os.path.join(path, dir, "GOTOWE")
