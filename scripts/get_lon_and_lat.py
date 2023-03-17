@@ -5,9 +5,9 @@ from pyproj import Proj, Transformer
 if __name__ == "__main__":
     parquet_directory = "./data/clean_topo"
     output_parquet_directory = "./data/wind_turbines.parquet"
-    df = pd.read_parquet(parquet_directory)
+    df = geopandas.read_parquet(parquet_directory)
     df = df.loc[df["rodzaj"] == "Twt"]
-    df = df[["x", "y", "wysokosc"]]
+    df = df[["x", "y", "wysokosc", "geometry"]]
 
     transformer = Transformer.from_crs("ESRI:102173", "epsg:4326")
 

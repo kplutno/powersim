@@ -17,10 +17,12 @@ lxml = "^4.9.2"
 geopandas = "^0.12.2"
 pyarrow = "^11.0.0"
 pyproj = "^3.4.1"
+matplotlib = "^3.7.1"
 
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.1.0"
+ipykernel = "^6.21.3"
 
 [build-system]
 requires = ["poetry-core"]

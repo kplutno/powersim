@@ -1,39 +1,36 @@
 \documentclass{pracamgr}
+\usepackage{import}
+\usepackage[
+backend=biber,
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+
+\addbibresource{./refs.bib}
 
 \autor{Krzysztof Płuciennik}{419394}
 
-\title{Tytuł}
-
+\title{Praca Magisterska}
 \tytulang{Eng title}
-
 \kierunek{Inżynieria Obliczeniowa}
-
-\opiekun{Promotor
-  }
-
+\opiekun{Pani}
 \date{Marzec 2023}
-
 \keywords{}
+
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-    Tutaj będzie abstract.
+    Abstract. This is our bib: \cite{latex2e}
 \end{abstract}
 
 \tableofcontents
 
-\chapter*{Wprowadzenie}
+\chapter{Wprowadzenie}
 \addcontentsline{toc}{chapter}{Wprowadzenie}
+Wprowadzenie.
 
-    Wprowadzenie.
-
-
-\begin{thebibliography}{99}
-\addcontentsline{toc}{chapter}{Bibliografia}
-
-\end{thebibliography}
-
+\printbibliography
 \end{document}
