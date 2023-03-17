@@ -1,0 +1,40 @@
+---
+data:
+  res_list:
+    path: "./data/res-list.XLSX"
+    columns:
+      - "lp"
+      - "rodzaj"
+      - "woje"
+      - "powiat"
+      - "moc"
+    columns_rename:
+      "Lp.": "lp"
+      "Rodzaj OZE": "rodzaj"
+      "Województwo": "woje"
+      "Powiat": "powiat"
+      "Moc zainstalowana [MW]": "moc"
+    geo:
+      country: Poland
+
+  clean_res_list:
+    path: "./data/clean_res_list.csv"
+    columns:
+      - "lp"
+      - "rodzaj"
+      - "woje"
+      - "powiat"
+      - "moc"
+      - "lon"
+      - "lat"
+  
+  topo_data:
+    input_path: "./data/topo"
+    output_path: "./data/clean_topo"
+    wind: "Twt"
+
+computations:
+  dt:
+    minutes: 1
+    seconds: 30
+  starttime: "2010-02-11 00:00:00"

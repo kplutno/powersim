@@ -1,14 +1,18 @@
-from agent_based.models.base_model import Model
-import time
+from agent_based.models.base_model import ModelV1
+from utils.process import process_ure_rse_source, load_config, load_clean_res_data
 
 if __name__ == "__main__":
-    
-    model = Model(2000000, dt=0.1)
-    
-    tstart = time.time()
-    for i in range(10):
+    config_file = "./config/config.yml"
+    config = load_config(config_file)
+
+    try:
+        wind_sources, pv_sources, res = load_clean_res_data(config)
+
+    except FileNotFoundError:
+        process_ure_rse_source(config)
+        wind_sources, pv_sources, res = load_clean_res_data(config)
+
+    model = ModelV1(wind_sources, pv_sources, time_list=[0, 1, 2])
+
+    for i in range(2):
         model.step()
-    
-    tend = time.time()
-    
-    print(tend-tstart)

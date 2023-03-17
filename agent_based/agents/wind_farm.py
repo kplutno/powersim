@@ -1,6 +1,6 @@
 import mesa
 
-class PVInstallation(mesa.Agent):
+class WindInstallation(mesa.Agent):
     def __init__(self, unique_id: int, model: mesa.Model, voivodeship: str, powiat: str, power: float):
         super().__init__(unique_id, model)
         self.voivodeship = voivodeship

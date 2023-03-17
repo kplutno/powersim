@@ -1,39 +1,42 @@
 \documentclass{pracamgr}
+\usepackage{import}
+\usepackage[
+backend=biber,
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+
+\addbibresource{./bibliography.bib}
 
 \autor{Krzysztof Płuciennik}{419394}
 
-\title{Tytuł}
-
+\title{Praca Magisterska}
 \tytulang{Eng title}
-
 \kierunek{Inżynieria Obliczeniowa}
-
-\opiekun{Promotor
-  }
-
-\date{Marzec 2023}
-
+\opiekun{dr inż. Karolina Szafranek}
+\date{Czerwiec 2023}
 \keywords{}
+
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-    Tutaj będzie abstract.
+    
 \end{abstract}
 
 \tableofcontents
 
-\chapter*{Wprowadzenie}
-\addcontentsline{toc}{chapter}{Wprowadzenie}
+\chapter{Wprowadzenie}
+\import{./chapters}{wprowadzenie.tex}
 
-    Wprowadzenie.
+\chapter{Wstęp teoretyczny}
+\import{./chapters}{wstep_teoretyczny.tex}
 
+\chapter{Model matematyczny}
+\import{./chapters}{model_matematyczny.tex}
 
-\begin{thebibliography}{99}
-\addcontentsline{toc}{chapter}{Bibliografia}
-
-\end{thebibliography}
+\printbibliography
 
 \end{document}
