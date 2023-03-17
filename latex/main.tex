@@ -6,15 +6,15 @@ style=alphabetic,
 sorting=ynt
 ]{biblatex}
 
-\addbibresource{./refs.bib}
+\addbibresource{./bibliography.bib}
 
 \autor{Krzysztof Płuciennik}{419394}
 
 \title{Praca Magisterska}
 \tytulang{Eng title}
 \kierunek{Inżynieria Obliczeniowa}
-\opiekun{Pani}
-\date{Marzec 2023}
+\opiekun{dr inż. Karolina Szafranek}
+\date{Czerwiec 2023}
 \keywords{}
 
 
@@ -23,14 +23,20 @@ sorting=ynt
 \maketitle
 
 \begin{abstract}
-    Abstract. This is our bib: \cite{latex2e}
+    
 \end{abstract}
 
 \tableofcontents
 
 \chapter{Wprowadzenie}
-\addcontentsline{toc}{chapter}{Wprowadzenie}
-Wprowadzenie.
+\import{./chapters}{wprowadzenie.tex}
+
+\chapter{Wstęp teoretyczny}
+\import{./chapters}{wstep_teoretyczny.tex}
+
+\chapter{Model matematyczny}
+\import{./chapters}{model_matematyczny.tex}
 
 \printbibliography
+
 \end{document}

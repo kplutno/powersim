@@ -14,4 +14,4 @@ if __name__ == "__main__":
     poland_shapefile_directory = "./data/pl_10km.shp"
     df_poland = geopandas.read_file(poland_shapefile_directory)
     df_poland.plot()
-    plt.savefig("poland.png")
+    plt.savefig("/data/poland.png")
