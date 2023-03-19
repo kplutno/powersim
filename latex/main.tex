@@ -1,4 +1,4 @@
-\documentclass{pracamgr}
+\documentclass[en]{pracamgr}
 \usepackage{import}
 \usepackage[
 backend=biber,
@@ -11,12 +11,24 @@ sorting=ynt
 
 \autor{Krzysztof Płuciennik}{419394}
 
-\title{Praca Magisterska}
-\tytulang{Eng title}
-\kierunek{Inżynieria Obliczeniowa}
+\title{Computational model of Renewable Energy Sources in Polish Power System}
+\titlepl{Eng title}
+\kierunek{Computational Engineering}
 \opiekun{dr inż. Karolina Szafranek}
-\date{Czerwiec 2023}
+\date{June 2023}
 \keywords{}
+\dziedzina{ 
+    High Performance Computing
+}
+
+
+\klasyfikacja{
+  ACM
+}
+
+\keywords{
+  Renewable Energy Sources
+}
 
 
 \begin{document}
@@ -29,14 +41,14 @@ sorting=ynt
 
 \tableofcontents
 
-\chapter{Wprowadzenie}
-\import{./chapters}{wprowadzenie.tex}
+\chapter{Introduction}
+\import{./chapters}{introduction.tex}
 
-\chapter{Wstęp teoretyczny}
-\import{./chapters}{wstep_teoretyczny.tex}
+\chapter{Theoretical introduction}
+\import{./chapters}{theoretical_introduction.tex}
 
-\chapter{Model matematyczny}
-\import{./chapters}{model_matematyczny.tex}
+\chapter{Mathematical model}
+\import{./chapters}{mathematical_model.tex}
 
 \printbibliography
 

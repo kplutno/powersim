@@ -82,7 +82,7 @@
 		\let \footnote \thanks
 		\begin{center}%
 		  {\LARGE\textbf{ University of Warsaw}\\
-			Faculty of Mathematics, Informatics and Mechanics\par}
+		  	Interdisciplinary Centre for Mathematical and Computational Modelling\par}
 		  \vspace{1cm plus .5fill}
 		{
 			\setlength{\parindent}{0em}
