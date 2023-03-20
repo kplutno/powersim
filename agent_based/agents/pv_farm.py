@@ -48,6 +48,7 @@ class PVInstallation(mesa.Agent):
         module = self.sandia_modules["Canadian_Solar_CS5P_220M___2009_"]
         inverter = self.cec_inverters["ABB__MICRO_0_25_I_OUTD_US_208__208V_"]
 
+        print(module)
         temperature_model_parameters = TEMPERATURE_MODEL_PARAMETERS["sapm"][
             "open_rack_glass_glass"
         ]
@@ -73,8 +74,6 @@ class PVInstallation(mesa.Agent):
     def step(self):
         weather = self.model.get_weather_pv(self.latitude, self.longitude)
 
-        self.logger.debug(f"Calculations for PVInstallation id: {self.unique_id}")
-
         self.model_chain.run_model(weather)
 
-        print(self.model_chain.results.effective_irradiance)
+        self.power = self.model_chain.results.ac.iloc[0]

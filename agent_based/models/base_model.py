@@ -30,14 +30,14 @@ class ModelV1(mesa.Model):
             self.time = self.starttime
 
         # Choose the scheduler
-        self.scheduler = mesa.time.RandomActivation(self)
+        self.schedule = mesa.time.RandomActivation(self)
 
         # Logging the dataframes shapes
         self.logger.info(f"Wind sources dataframe shape: {wind.shape}")
         self.logger.info(f"PV sources shape: {pv.shape}")
 
         for index, wind_turbine in wind.iterrows():
-            self.scheduler.add(
+            self.schedule.add(
                 WindInstallation(
                     self.next_id(),
                     self,
@@ -50,7 +50,7 @@ class ModelV1(mesa.Model):
             )
 
         for index, pv_elem in pv.iterrows():
-            self.scheduler.add(
+            self.schedule.add(
                 PVInstallation(
                     self.next_id(),
                     self,
@@ -62,12 +62,26 @@ class ModelV1(mesa.Model):
                 )
             )
 
+        self.datacollector = mesa.DataCollector(
+            model_reporters={"time": "time"}, agent_reporters={"Power": "power"}
+        )
+
     def step(self):
+        self.datacollector.collect(self)
         self.logger.info(f"Starting computations for time: {self.time}")
-        self.scheduler.step()
+        self.schedule.step()
         self.time += self.dt
 
     def get_weather_pv(self, latitude: float, longitude: float):
+        
+        model = "um"
+        grid = "P5"
+        coordinates = "4,5"
+        fields = ["01215_0000000", "01216_0000000", "01235_0000000"]
+        date = self.time
+        for field in fields:
+            url = f"https://api.meteo.pl/api/v1/model/{model}/grid/{grid}/coordinates/{coordinates}/field/{field}/level/_/date/{date}/forecast/"
+
         weather = dict()
 
         index = pd.DatetimeIndex(

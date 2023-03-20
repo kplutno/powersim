@@ -9,10 +9,10 @@ from unidecode import unidecode
 from logging.config import dictConfig
 import logging
 
-logger = logging.getLogger(__name__)
-
 
 def process_ure_rse_source(config: Box):
+    logger = logging.getLogger(__name__)
+    
     logger.info("Processing RSE data source.")
     logger.info(f"Loading {config.data.res_list.path} file.")
     
@@ -45,7 +45,7 @@ def process_ure_rse_source(config: Box):
         if len(locs[query_string]) > 0:
             value = locs[query_string][0]["lat"]
         else:
-            value = None
+            value = 51.9189046
         return value
 
     def get_lon(row):
@@ -55,21 +55,23 @@ def process_ure_rse_source(config: Box):
         if len(locs[query_string]) > 0:
             value = locs[query_string][0]["lon"]
         else:
-            value = None
+            value = 19.1343786
         return value
 
     res["lat"] = res.apply(get_lat, axis=1)
     res["lon"] = res.apply(get_lon, axis=1)
-    res["woje"] = res["woje"].apply(lambda x: unidecode(x), axis=1)
-    res["powiat"] = res["woje"].apply(lambda x: unidecode(x), axis=1)
+    res["woje"] = res.apply(lambda x: unidecode(x["woje"]), axis=1)
+    res["powiat"] = res.apply(lambda x: unidecode(x["powiat"]), axis=1)
     
     logger.info(f"Saving to {config.data.clean_res_list.path} file.")
-    res.to_parquet(config.data.clean_res_list.path)
+    res.to_csv(config.data.clean_res_list.path)
     return res
 
 
 def load_clean_res_data(config: Box):
-    res = pd.read_parquet(
+    logger = logging.getLogger(__name__)
+    
+    res = pd.read_csv(
         config.data.clean_res_list.path,
     )
 

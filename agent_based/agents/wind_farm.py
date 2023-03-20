@@ -10,4 +10,4 @@ class WindInstallation(mesa.Agent):
         self.longitude = longitude
         
     def step(self):
-        pass
+        self.power += self.power

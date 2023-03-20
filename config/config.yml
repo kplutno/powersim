@@ -12,7 +12,7 @@ data:
       country: Poland
 
   clean_res_list:
-    path: "./data/clean_res_list.parquet"
+    path: "./data/clean_res_list.csv"
 
   topo_data:
     input_path: "./data/topo"
@@ -35,7 +35,7 @@ process:
 # Logging
 formatters:
   console_format:
-    format: '[%(asctime)s %(levelname)s %(name)s] %(message)s'
+    format: "[%(asctime)s %(levelname)s %(name)s] %(message)s"
 
 handlers:
   console:

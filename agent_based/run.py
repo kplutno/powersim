@@ -21,22 +21,25 @@ def main():
 
     logger.info("Loading data.")
     wind_df, pv_df, res_df = load_clean_res_data(config)
-
-    wind_df = wind_df.iloc[0:3]
-    pv_df = pv_df.iloc[0:3]
+    
+    wind_df = wind_df.iloc[0:1]
+    pv_df = pv_df.iloc[0:1]
     
     logger.info("Creating model.")
     
     default_timezone = timezone(config.time.timezone)
     
-    starttime = datetime.datetime(2022, 1, 12, 0, 0,  tzinfo=default_timezone)
-    deltatime = datetime.timedelta(hours=1)
+    starttime = datetime.datetime(2022, 1, 12, 12, 0,  tzinfo=default_timezone)
+    deltatime = datetime.timedelta(minutes=15)
     
     model = ModelV1(wind_df, pv_df, starttime=starttime, deltatime=deltatime)
 
-    for i in range(24):
+    for i in range(4):
         model.step()
+    
+    agent_power = model.datacollector.get_agent_vars_dataframe()
 
+    print(agent_power)
 
 if __name__ == "__main__":
     main()
