@@ -8,6 +8,6 @@ class WindInstallation(mesa.Agent):
         self.power = power
         self.latitude = latitude
         self.longitude = longitude
-        
+
     def step(self):
         self.power += self.power

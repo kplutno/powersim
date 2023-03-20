@@ -1,0 +1,27 @@
+---
+process:
+  process_ure_rse_source: False
+  process_topo: False
+
+data:
+  res_list:
+    path: "./data/res-list.XLSX"
+    columns_rename:
+      "Lp.": "lp"
+      "Rodzaj OZE": "rodzaj"
+      "Województwo": "woje"
+      "Powiat": "powiat"
+      "Moc zainstalowana [MW]": "moc"
+    geo:
+      country: Poland
+
+  clean_res_list:
+    path: "./data/clean_res_list.csv"
+
+  topo_data:
+    input_path: "./data/topo"
+    output_path: "./data/clean_topo"
+    wind_acronym: "Twt"
+
+  wind_turbines:
+    output_path: "./data/wind_turbines.parquet"

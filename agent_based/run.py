@@ -1,14 +1,14 @@
 from agent_based.models.base_model import ModelV1
 from utils.process import process_ure_rse_source, load_config, load_clean_res_data
 from utils.topo_data_process import process_topo
-import pandas as pd
 import logging
 import datetime
 from pytz import timezone
+import time
 
 def main():
-    config_file = "./config/config.yml"
-    config = load_config(config_file)
+    config_path = "./config/*.yml"
+    config = load_config(config_path)
 
     logger = logging.getLogger(__name__)
     logger.info("Data processing")
@@ -21,10 +21,7 @@ def main():
 
     logger.info("Loading data.")
     wind_df, pv_df, res_df = load_clean_res_data(config)
-    
-    wind_df = wind_df.iloc[0:1]
-    pv_df = pv_df.iloc[0:1]
-    
+
     logger.info("Creating model.")
     
     default_timezone = timezone(config.time.timezone)
@@ -32,14 +29,15 @@ def main():
     starttime = datetime.datetime(2022, 1, 12, 12, 0,  tzinfo=default_timezone)
     deltatime = datetime.timedelta(minutes=15)
     
-    model = ModelV1(wind_df, pv_df, starttime=starttime, deltatime=deltatime)
+    model = ModelV1(wind_df, pv_df, config, starttime=starttime, deltatime=deltatime)
 
-    for i in range(4):
-        model.step()
+    sttime = time.time()
+    model.step()
+    long = time.time() - sttime
+    
+    print(f"Scheduler: {config.computations.scheduler} took: {long} seconds.")
     
     agent_power = model.datacollector.get_agent_vars_dataframe()
-
-    print(agent_power)
 
 if __name__ == "__main__":
     main()

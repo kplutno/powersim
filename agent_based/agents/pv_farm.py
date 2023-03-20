@@ -19,8 +19,9 @@ import pandas as pd
 
 
 class PVInstallation(mesa.Agent):
-    sandia_modules = retrieve_sam("SandiaMod")
+    modules_database = retrieve_sam("CECMod")
     cec_inverters = retrieve_sam("cecinverter")
+    modules_database.to_csv("./data/CECMod.csv")
 
     def __init__(
         self,
@@ -45,10 +46,9 @@ class PVInstallation(mesa.Agent):
         self.altitude = float(altitude)
         self.timezone = timezone
 
-        module = self.sandia_modules["Canadian_Solar_CS5P_220M___2009_"]
+        module = self.modules_database["APOS_Energy_AP205"]
         inverter = self.cec_inverters["ABB__MICRO_0_25_I_OUTD_US_208__208V_"]
 
-        print(module)
         temperature_model_parameters = TEMPERATURE_MODEL_PARAMETERS["sapm"][
             "open_rack_glass_glass"
         ]
@@ -66,10 +66,10 @@ class PVInstallation(mesa.Agent):
         self.location = Location(
             self.latitude, self.longitude, self.timezone, self.altitude
         )
-
         self.system = PVSystem(arrays=pv_arrays, inverter_parameters=inverter)
-
-        self.model_chain = ModelChain(self.system, self.location)
+        self.model_chain = ModelChain(
+            self.system, self.location, aoi_model="no_loss", spectral_model="no_loss"
+        )
 
     def step(self):
         weather = self.model.get_weather_pv(self.latitude, self.longitude)

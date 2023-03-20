@@ -8,14 +8,15 @@ import time
 from unidecode import unidecode
 from logging.config import dictConfig
 import logging
+import glob
 
 
 def process_ure_rse_source(config: Box):
     logger = logging.getLogger(__name__)
-    
+
     logger.info("Processing RSE data source.")
     logger.info(f"Loading {config.data.res_list.path} file.")
-    
+
     res = pd.read_excel(
         config.data.res_list.path,
     )
@@ -37,7 +38,7 @@ def process_ure_rse_source(config: Box):
             response = requests.get(url).json()
             locs[query_string] = response
             time.sleep(0.3)
-    
+
     def get_lat(row):
         state = row["woje"]
         county = row["powiat"]
@@ -62,7 +63,7 @@ def process_ure_rse_source(config: Box):
     res["lon"] = res.apply(get_lon, axis=1)
     res["woje"] = res.apply(lambda x: unidecode(x["woje"]), axis=1)
     res["powiat"] = res.apply(lambda x: unidecode(x["powiat"]), axis=1)
-    
+
     logger.info(f"Saving to {config.data.clean_res_list.path} file.")
     res.to_csv(config.data.clean_res_list.path)
     return res
@@ -70,7 +71,8 @@ def process_ure_rse_source(config: Box):
 
 def load_clean_res_data(config: Box):
     logger = logging.getLogger(__name__)
-    
+
+    logger.info(f"Loading dataset {config.data.clean_res_list.path}")
     res = pd.read_csv(
         config.data.clean_res_list.path,
     )
@@ -82,10 +84,25 @@ def load_clean_res_data(config: Box):
 
 
 def load_config(config_path: str):
-    with open(config_path) as f:
-        config = yaml.load(f, Loader=FullLoader)
+    logger = logging.getLogger(__name__)
+    logger.info(f"Loading config from folder {config_path}")
+    config = dict()
+    files = glob.glob(config_path)
+    
+    
+    for file in files:
+        config.update(read_yaml_file(file))
 
     dictConfig(config)
     config = Box(config)
 
     return config
+
+
+def read_yaml_file(filename):
+    with open(filename, "r") as f:
+        try:
+            yml = yaml.load(f, Loader=FullLoader)
+        except yaml.YAMLError as exc:
+            print(exc)
+    return yml

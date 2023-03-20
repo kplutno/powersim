@@ -4,6 +4,7 @@ from agent_based.agents.pv_farm import PVInstallation
 from agent_based.agents.wind_farm import WindInstallation
 import pandas as pd
 import logging
+from agent_based.schedulers.concurent_scheduler import SimpleMPScheduler
 
 
 class ModelV1(mesa.Model):
@@ -11,6 +12,7 @@ class ModelV1(mesa.Model):
         self,
         wind: pd.DataFrame,
         pv: pd.DataFrame,
+        config: dict,
         starttime: datetime = None,
         deltatime: datetime.timedelta = None,
         time_list: list = None,
@@ -18,6 +20,7 @@ class ModelV1(mesa.Model):
         # Init
         super().__init__(self)
         self.logger = logging.getLogger(__name__)
+        self.config = config
 
         # Provide list of times or starttime and delta
         if starttime is not None:
@@ -30,7 +33,12 @@ class ModelV1(mesa.Model):
             self.time = self.starttime
 
         # Choose the scheduler
-        self.schedule = mesa.time.RandomActivation(self)
+        schedulers = {
+            "random_sequential": mesa.time.RandomActivation,
+            "parallel": SimpleMPScheduler,
+        }
+
+        self.schedule = schedulers[config.computations.scheduler](self)
 
         # Logging the dataframes shapes
         self.logger.info(f"Wind sources dataframe shape: {wind.shape}")
@@ -66,19 +74,22 @@ class ModelV1(mesa.Model):
             model_reporters={"time": "time"}, agent_reporters={"Power": "power"}
         )
 
-    def step(self):
+    def step(self, number_of_steps):
+        self.logger.info(f"Starting computations for time {self.time}")
         self.datacollector.collect(self)
-        self.logger.info(f"Starting computations for time: {self.time}")
         self.schedule.step()
-        self.time += self.dt
+
+    def steps(self, number_of_steps):
+        self.logger.info(f"Starting computations for time n steps: {number_of_steps}")
+        self.schedule.step(number_of_steps)
 
     def get_weather_pv(self, latitude: float, longitude: float):
-        
         model = "um"
         grid = "P5"
         coordinates = "4,5"
         fields = ["01215_0000000", "01216_0000000", "01235_0000000"]
         date = self.time
+
         for field in fields:
             url = f"https://api.meteo.pl/api/v1/model/{model}/grid/{grid}/coordinates/{coordinates}/field/{field}/level/_/date/{date}/forecast/"
 
