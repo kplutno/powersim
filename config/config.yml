@@ -2,12 +2,6 @@
 data:
   res_list:
     path: "./data/res-list.XLSX"
-    columns:
-      - "lp"
-      - "rodzaj"
-      - "woje"
-      - "powiat"
-      - "moc"
     columns_rename:
       "Lp.": "lp"
       "Rodzaj OZE": "rodzaj"
@@ -18,20 +12,15 @@ data:
       country: Poland
 
   clean_res_list:
-    path: "./data/clean_res_list.csv"
-    columns:
-      - "lp"
-      - "rodzaj"
-      - "woje"
-      - "powiat"
-      - "moc"
-      - "lon"
-      - "lat"
-  
+    path: "./data/clean_res_list.parquet"
+
   topo_data:
     input_path: "./data/topo"
     output_path: "./data/clean_topo"
-    wind: "Twt"
+    wind_acronym: "Twt"
+
+  wind_turbines:
+    output_path: "./data/wind_turbines.parquet"
 
 computations:
   dt:
@@ -42,3 +31,21 @@ computations:
 process:
   process_ure_rse_source: False
   process_topo: False
+
+# Logging
+formatters:
+  console_format:
+    format: '[%(asctime)s %(levelname)s %(name)s] %(message)s'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    stream: ext://sys.stdout
+    formatter: console_format
+
+root:
+  level: INFO
+  handlers: ["console"]
+
+version: 1

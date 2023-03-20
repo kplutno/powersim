@@ -5,9 +5,17 @@ from yaml.loader import FullLoader
 import requests
 from urllib.parse import quote
 import time
+from unidecode import unidecode
+from logging.config import dictConfig
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def process_ure_rse_source(config: Box):
+    logger.info("Processing RSE data source.")
+    logger.info(f"Loading {config.data.res_list.path} file.")
+    
     res = pd.read_excel(
         config.data.res_list.path,
     )
@@ -29,7 +37,7 @@ def process_ure_rse_source(config: Box):
             response = requests.get(url).json()
             locs[query_string] = response
             time.sleep(0.3)
-
+    
     def get_lat(row):
         state = row["woje"]
         county = row["powiat"]
@@ -37,7 +45,7 @@ def process_ure_rse_source(config: Box):
         if len(locs[query_string]) > 0:
             value = locs[query_string][0]["lat"]
         else:
-            value = ""
+            value = None
         return value
 
     def get_lon(row):
@@ -47,28 +55,35 @@ def process_ure_rse_source(config: Box):
         if len(locs[query_string]) > 0:
             value = locs[query_string][0]["lon"]
         else:
-            value = ""
+            value = None
         return value
 
     res["lat"] = res.apply(get_lat, axis=1)
     res["lon"] = res.apply(get_lon, axis=1)
-
-    res.to_csv(config.data.clean_res_list.path)
+    res["woje"] = res["woje"].apply(lambda x: unidecode(x), axis=1)
+    res["powiat"] = res["woje"].apply(lambda x: unidecode(x), axis=1)
+    
+    logger.info(f"Saving to {config.data.clean_res_list.path} file.")
+    res.to_parquet(config.data.clean_res_list.path)
     return res
 
+
 def load_clean_res_data(config: Box):
-    res = pd.read_csv(
+    res = pd.read_parquet(
         config.data.clean_res_list.path,
     )
-    
+
     wind = res.loc[res["rodzaj"] == "WIL"]
-    pv = res.loc[res["rodzaj"] == "WIL"]
-    
+    pv = res.loc[res["rodzaj"] == "PVA"]
+
     return wind, pv, res
+
 
 def load_config(config_path: str):
     with open(config_path) as f:
         config = yaml.load(f, Loader=FullLoader)
+
+    dictConfig(config)
     config = Box(config)
 
     return config

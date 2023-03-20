@@ -18,6 +18,7 @@ geopandas = "^0.12.2"
 pyarrow = "^11.0.0"
 pyproj = "^3.4.1"
 matplotlib = "^3.7.1"
+pvlib = "^0.9.5"
 
 
 [tool.poetry.group.dev.dependencies]
