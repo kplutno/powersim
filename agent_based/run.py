@@ -3,7 +3,8 @@ from utils.process import process_ure_rse_source, load_config, load_clean_res_da
 from utils.topo_data_process import process_topo
 import pandas as pd
 import logging
-
+import datetime
+from pytz import timezone
 
 def main():
     config_file = "./config/config.yml"
@@ -21,10 +22,19 @@ def main():
     logger.info("Loading data.")
     wind_df, pv_df, res_df = load_clean_res_data(config)
 
+    wind_df = wind_df.iloc[0:3]
+    pv_df = pv_df.iloc[0:3]
+    
     logger.info("Creating model.")
-    model = ModelV1(wind_df, pv_df, time_list=[0, 1, 2])
+    
+    default_timezone = timezone(config.time.timezone)
+    
+    starttime = datetime.datetime(2022, 1, 12, 0, 0,  tzinfo=default_timezone)
+    deltatime = datetime.timedelta(hours=1)
+    
+    model = ModelV1(wind_df, pv_df, starttime=starttime, deltatime=deltatime)
 
-    for i in range(2):
+    for i in range(24):
         model.step()
 
 

@@ -21,7 +21,6 @@ class ModelV1(mesa.Model):
 
         # Provide list of times or starttime and delta
         if starttime is not None:
-            self.starttime = starttime
             self.dt = deltatime
             self.time = starttime
         else:
@@ -65,6 +64,23 @@ class ModelV1(mesa.Model):
 
     def step(self):
         self.logger.info(f"Starting computations for time: {self.time}")
+        self.scheduler.step()
         self.time += self.dt
 
-        self.scheduler.step()
+    def get_weather_pv(self, latitude: float, longitude: float):
+        weather = dict()
+
+        index = pd.DatetimeIndex(
+            [
+                self.time,
+            ]
+        )
+
+        weather["pressure"] = 1000.0
+        weather["temp_air"] = 20.0
+        weather["dni"] = 800
+        weather["ghi"] = 600
+        weather["dhi"] = 1000
+        weather["wind_speed"] = 5
+
+        return pd.DataFrame(data=weather, index=index)

@@ -49,3 +49,7 @@ root:
   handlers: ["console"]
 
 version: 1
+
+time:
+  starttime: 0
+  timezone: "Europe/Warsaw"
