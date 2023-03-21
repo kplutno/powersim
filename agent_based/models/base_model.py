@@ -74,7 +74,7 @@ class ModelV1(mesa.Model):
             model_reporters={"time": "time"}, agent_reporters={"Power": "power"}
         )
 
-    def step(self, number_of_steps):
+    def step(self):
         self.logger.info(f"Starting computations for time {self.time}")
         self.datacollector.collect(self)
         self.schedule.step()

@@ -1,6 +1,5 @@
 ---
 computations:
   scheduler: parallel
-  number_of_processes: 8
+  number_of_processes: 4
   backend: threads
-  number_of_steps: 8

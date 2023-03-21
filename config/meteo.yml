@@ -1,0 +1,12 @@
+---
+meteo:
+  grid: P5
+  models:
+    - um
+    - WFS
+    - SCAMP
+  fields:
+    sun:
+      - 01215_0000000
+      - 01216_0000000
+      - 01235_0000000
