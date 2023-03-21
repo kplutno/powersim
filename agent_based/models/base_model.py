@@ -78,10 +78,7 @@ class ModelV1(mesa.Model):
         self.logger.info(f"Starting computations for time {self.time}")
         self.datacollector.collect(self)
         self.schedule.step()
-
-    def steps(self, number_of_steps):
-        self.logger.info(f"Starting computations for time n steps: {number_of_steps}")
-        self.schedule.step(number_of_steps)
+        self.time += self.dt
 
     def get_weather_pv(self, latitude: float, longitude: float):
         model = "um"
