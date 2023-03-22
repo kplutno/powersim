@@ -1,12 +1,53 @@
 ---
 meteo:
+  save:
+    pv_data:
+      path: "./data/weather"
+      store_template: "{date}.parquet"
+
   grid: P5
+
+  time_format: "%Y-%m-%dT%H"
+
   models:
-    - um
-    - WFS
-    - SCAMP
+    um:
+      grids:
+        - P5
+        - p5
+
+  # In 15 minutes periods
+  # 480 * 15 min - 5 days
+  length_of_forecast: 480
+
   fields:
     sun:
-      - 01215_0000000
-      - 01216_0000000
-      - 01235_0000000
+      temp_air:
+        code: "03236_0000000"
+        grid: P5
+      u_10:
+        code: "03225_0000000"
+        grid: p5
+      v_10:
+        code: "03226_0000000"
+        grid: p5
+      pressure:
+        code: "16222_0000000"
+        grid: P5
+        interpolate_method: time
+      dni:
+        code: "01215_0000000"
+        grid: P5
+      dhi:
+        code: "01216_0000000"
+        grid: P5
+      ghi:
+        code: "01235_0000000"
+        grid: P5
+
+    wind:
+      - temp
+      - temp
+      - temp
+  api:
+    url: "https://api.meteo.pl/api/v1/model/{model}/grid/{grid}/coordinates/{coordinates}/field/{field}/level/_/date/{date}/forecast/"
+    url_rowcol: "https://api.meteo.pl/api/v1/model/{model}/grid/{grid}/latlon2rowcol/{latlon}/"

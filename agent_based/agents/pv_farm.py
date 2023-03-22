@@ -3,16 +3,11 @@ import logging
 from pvlib.location import Location
 from pvlib.pvsystem import (
     PVSystem,
-    sapm_effective_irradiance,
-    pvwatts_dc,
     Array,
     FixedMount,
     retrieve_sam,
 )
-from pvlib.solarposition import get_solarposition
-from pvlib.atmosphere import alt2pres, get_relative_airmass, get_absolute_airmass
-from pvlib.irradiance import get_total_irradiance, get_extra_radiation, aoi
-from pvlib.temperature import TEMPERATURE_MODEL_PARAMETERS, sapm_cell, sapm_module
+from pvlib.temperature import TEMPERATURE_MODEL_PARAMETERS
 from pvlib.modelchain import ModelChain
 
 import pandas as pd
@@ -32,6 +27,8 @@ class PVInstallation(mesa.Agent):
         power: float,
         latitude: float,
         longitude: float,
+        P5: str,
+        p5: str,
         altitude: float = 0.0,
         timezone: str = "Europe/Warsaw",
     ):
@@ -45,7 +42,11 @@ class PVInstallation(mesa.Agent):
         self.longitude = float(longitude)
         self.altitude = float(altitude)
         self.timezone = timezone
-
+        self.coordinates = {
+            "P5" : P5,
+            "p5" : p5
+        }
+        
         module = self.modules_database["APOS_Energy_AP205"]
         inverter = self.cec_inverters["ABB__MICRO_0_25_I_OUTD_US_208__208V_"]
 
@@ -72,7 +73,7 @@ class PVInstallation(mesa.Agent):
         )
 
     def step(self):
-        weather = self.model.get_weather_pv(self.latitude, self.longitude)
+        weather = self.model.get_weather_pv(self.model.time, self.coordinates)
 
         self.model_chain.run_model(weather)
 

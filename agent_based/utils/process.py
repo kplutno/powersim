@@ -72,9 +72,9 @@ def process_ure_rse_source(config: Box):
 def load_clean_res_data(config: Box):
     logger = logging.getLogger(__name__)
 
-    logger.info(f"Loading dataset {config.data.clean_res_list.path}")
+    logger.info(f"Loading dataset {config.data.ure_res_list_rowcol.path}")
     res = pd.read_csv(
-        config.data.clean_res_list.path,
+        config.data.ure_res_list_rowcol.path,
     )
 
     wind = res.loc[res["rodzaj"] == "WIL"]

@@ -2,6 +2,7 @@
 process:
   process_ure_rse_source: False
   process_topo: False
+  process_add_row_col: False
 
 data:
   res_list:
@@ -15,8 +16,18 @@ data:
     geo:
       country: Poland
 
+  # Dataset with longitude/latitude values
+  # Fetch from OpenStreetMap
   clean_res_list:
     path: "./data/clean_res_list.csv"
+
+  # Clean res list with dataset with row/col per grid in meteo model
+  # Fetch from ICM MeteoAPI
+  ure_res_list_rowcol:
+    path: "./data/ure_res_list_rowcol.csv"
+    types_of_res:
+      - "PVA"
+      - "WIL"
 
   topo_data:
     input_path: "./data/topo"
