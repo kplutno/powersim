@@ -21,8 +21,7 @@ class ModelV1(mesa.Model):
         pv: pd.DataFrame,
         config: dict,
         starttime: datetime = None,
-        deltatime: datetime.timedelta = None,
-        time_list: list = None,
+        deltatime: datetime.timedelta = None
     ):
         # Init
         super().__init__(self)
@@ -38,14 +37,9 @@ class ModelV1(mesa.Model):
         self.meteo_db = load_db_store(self.config)
         
         # Provide list of times or starttime and delta
-        if starttime is not None:
-            self.dt = deltatime
-            self.time = starttime
-        else:
-            self.time_list = time_list
-            self.starttime = time_list[0]
-            self.dt = time_list[1] - time_list[0]
-            self.time = self.starttime
+        self.dt = deltatime
+        self.time = starttime
+
 
         # Choose the scheduler
         schedulers = {
@@ -95,8 +89,11 @@ class ModelV1(mesa.Model):
 
     def step(self):
         self.logger.info(f"Starting computations for time {self.time}")
+        
         self.datacollector.collect(self)
+        
         self.schedule.step()
+        
         self.time += self.dt
 
     def get_weather(self, time: datetime, coordinates: dict):

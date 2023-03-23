@@ -13,6 +13,7 @@ class SimpleMPScheduler(mesa.time.BaseScheduler):
             n_jobs=self.model.config.computations.number_of_processes,
             prefer=self.model.config.computations.backend,
             max_nbytes=1e6,
+            require="sharedmem"
         )(delayed(execute)(agent) for agent in self.agent_buffer(shuffled=True))
 
         self._agents = {agent.unique_id: agent for agent in results}

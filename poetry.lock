@@ -2650,6 +2650,25 @@ files = [
 ]
 
 [[package]]
+name = "windpowerlib"
+version = "0.2.1"
+description = "Creating time series of wind power plants."
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "windpowerlib-0.2.1-py3-none-any.whl", hash = "sha256:1f0590893a22548f80a2d0e2a6bf87418f29239da8a316f92e4ec7a84860ae14"},
+    {file = "windpowerlib-0.2.1.tar.gz", hash = "sha256:f585da2e0abf3cc371c5e75f275dec6bc984835fb6a7921a00f143d7973feeee"},
+]
+
+[package.dependencies]
+pandas = ">=0.20.0"
+requests = "*"
+
+[package.extras]
+dev = ["jupyter", "matplotlib", "nbformat", "numpy", "pytest", "sphinx-rtd-theme"]
+
+[[package]]
 name = "zipp"
 version = "3.15.0"
 description = "Backport of pathlib-compatible object wrapper for zip files"
@@ -2668,4 +2687,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "a87187f5a3c41750dbc591a634fb55405e16e32585feb41e87b71cd8774ed9de"
+content-hash = "2d43c4ade70506440f9a171699af20640b60585b4741bf0e6f7ab11d6219c73b"

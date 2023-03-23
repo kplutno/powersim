@@ -1,5 +1,16 @@
 ---
 computations:
-  scheduler: parallel
-  number_of_processes: 2
-  backend: processes
+  scheduler: random_sequential
+  number_of_processes: 4
+  backend: threads
+
+time:
+  start_time: 2022-08-16T00
+  end_time: 2022-08-18T00
+  format: "%Y-%m-%dT%H"
+  timezone: "Europe/Warsaw"
+  time_delta:
+    days: 1
+    hours: 0
+    minutes: 0
+    seconds: 0

@@ -1,0 +1,11 @@
+pv_panels:
+  AP205:
+    name: "APOS_Energy_AP205"
+    power_point: 205 #Wpeaks
+  Ablytek290:
+    name: "Ablytek_6MN6A290"
+    power_point: 290
+
+inverters:
+  ABBMicro:
+    name: "ABB__MICRO_0_25_I_OUTD_US_208__208V_"

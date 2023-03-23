@@ -3,7 +3,7 @@ from utils.process import process_ure_rse_source, load_config, load_clean_res_da
 from utils.process_ready_res_sources import add_ure_res_grid_coordinates
 from utils.topo_data_process import process_topo
 import logging
-import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
 import time
 
@@ -27,26 +27,30 @@ def main():
     logger.info("Loading data.")
     wind_df, pv_df, res_df = load_clean_res_data(config)
 
-    wind_df = wind_df.iloc[0:300]
-    pv_df = pv_df.iloc[0:300]
+    wind_df = wind_df.iloc[0:3]
+    pv_df = pv_df.iloc[0:3]
 
     logger.info("Creating model.")
 
     default_timezone = timezone(config.time.timezone)
 
-    starttime = datetime.datetime(2023, 3, 12, 0, 0)
-    deltatime = datetime.timedelta(minutes=15)
+    start_time = datetime.strptime(config.time.start_time, config.time.format)
+    end_time = datetime.strptime(config.time.end_time, config.time.format)
+    deltatime = timedelta(**config.time.time_delta)
+    steps = int((end_time - start_time) / deltatime)
 
-    model = ModelV1(wind_df, pv_df, config, starttime=starttime, deltatime=deltatime)
+    model = ModelV1(wind_df, pv_df, config, starttime=start_time, deltatime=deltatime)
 
     logger.info(f"Running code with scheduler: {config.computations.scheduler}")
     
     sttime = time.time()
-    model.step()
+    for i in range(steps):
+        model.step()
     long = time.time() - sttime
 
     logger.info(f"Scheduler: {config.computations.scheduler} took: {long} seconds.")
 
+    
     agent_power = model.datacollector.get_agent_vars_dataframe()
     
     logger.info("End of the calculations.")
