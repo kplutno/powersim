@@ -6,10 +6,10 @@ import requests
 import pandas as pd
 
 
-def fetch_meteo_pv_data(config, time, meteo_token, coordinates):
+def fetch_meteo_um_data(config, time, meteo_token, coordinates):
     models: list = config.meteo.models
     fields: list = config.meteo.fields.sun
-    time_format: str = config.meteo.time_format
+    time_format: str = config.meteo.api.time_format
     date: str = time.strftime(time_format)
     url_template = config.meteo.api.url
     length_of_forecast = config.meteo.length_of_forecast
@@ -44,31 +44,42 @@ def fetch_meteo_pv_data(config, time, meteo_token, coordinates):
         + time,
         freq=datetime.timedelta(minutes=15),
     )
-    
+
     pressure_index = pd.date_range(
         start=time,
-        end=(config.meteo.length_of_forecast * datetime.timedelta(minutes=15))
-        + time,
+        end=(config.meteo.length_of_forecast * datetime.timedelta(minutes=15)) + time,
         freq=datetime.timedelta(hours=1),
     )
 
     # Due to the different frequency, there is a need to adapt the pressure index
-    pressure_df = pd.DataFrame(
-        data=weather["pressure"], index=pressure_index
-    )
+    pressure_df = pd.DataFrame(data=weather["pressure"], index=pressure_index)
 
-    pressure_df = pressure_df.reindex(pressure_df.index.union(index)).interpolate(
-        config.meteo.fields.sun.pressure.interpolate_method
-    ).reindex(index)
+    pressure_df = (
+        pressure_df.reindex(pressure_df.index.union(index))
+        .interpolate(config.meteo.fields.sun.pressure.interpolate_method)
+        .reindex(index)
+    )
     pressure_df.columns = ["pressure"]
 
-    del(weather["pressure"])
-    
+    del weather["pressure"]
+
     weather_df = pd.DataFrame(data=weather, index=index).join(pressure_df)
 
-    store_name = config.meteo.save.pv_data.store_template.format(date = time.strftime("%Y-%m-%d"))
-    save_path = os.path.join(config.meteo.save.pv_data.path, store_name)
+    store_name = config.meteo.db.um.store_template.format(
+        date=time.strftime(config.meteo.save_time_format),
+        coordinates_P5=coordinates["P5"],
+        coordinates_p5=coordinates["p5"]
+    )
+    
+    save_path = os.path.join(config.meteo.db.um.path, store_name) + config.meteo.db.um.store_file_extension
 
     weather_df.to_parquet(save_path)
 
     return weather_df
+
+
+def load_db_store(config) -> set:
+    meteo_db = os.listdir(config.meteo.db.um.path)
+    meteo_db = {os.path.splitext(date)[0] for date in meteo_db}
+    
+    return meteo_db

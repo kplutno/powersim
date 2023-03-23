@@ -2,14 +2,13 @@ import mesa
 import datetime
 from agent_based.agents.pv_farm import PVInstallation
 from agent_based.agents.wind_farm import WindInstallation
-from agent_based.utils.meteo import fetch_meteo_pv_data
+from agent_based.utils.meteo import fetch_meteo_um_data, load_db_store
 import pandas as pd
 import logging
 from agent_based.schedulers.concurent_scheduler import SimpleMPScheduler
-import requests
+import sys
 import os
 from dotenv import load_dotenv
-from math import sqrt
 import datetime
 
 load_dotenv()
@@ -28,9 +27,16 @@ class ModelV1(mesa.Model):
         # Init
         super().__init__(self)
         self.logger = logging.getLogger(__name__)
+        
+        # Config setup
         self.config = config
+        self.logger.debug(f"Config size: {sys.getsizeof(config)}")
+        
         self.meteo_token = os.environ["METEO_API_KEY"]
-
+        
+        # Checking what forecasts are saved
+        self.meteo_db = load_db_store(self.config)
+        
         # Provide list of times or starttime and delta
         if starttime is not None:
             self.dt = deltatime
@@ -93,9 +99,25 @@ class ModelV1(mesa.Model):
         self.schedule.step()
         self.time += self.dt
 
-    def get_weather_pv(self, time: datetime, coordinates: dict):
-
-        weather_df = fetch_meteo_pv_data(self.config, time, self.meteo_token, coordinates)
-
-        print(weather_df)
+    def get_weather(self, time: datetime, coordinates: dict):
+        time_string = time.strftime(self.config.meteo.save_time_format)
+        
+        store_name = self.config.meteo.db.um.store_template.format(
+            date=time_string,
+            coordinates_P5=coordinates["P5"],
+            coordinates_p5=coordinates["p5"]
+        )
+        
+        if store_name in self.meteo_db:
+            # self.logger.debug(f"Loading weather data from store.")
+            path = self.config.meteo.db.um.path
+            path = os.path.join(path, store_name) + self.config.meteo.db.um.store_file_extension
+            weather_df = pd.read_parquet(path)
+            return weather_df
+        
+        weather_df = fetch_meteo_um_data(self.config, time, self.meteo_token, coordinates)
+        
+        # Update list
+        self.meteo_db = load_db_store(self.config)
+        
         return weather_df

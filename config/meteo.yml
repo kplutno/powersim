@@ -1,13 +1,13 @@
 ---
 meteo:
-  save:
-    pv_data:
-      path: "./data/weather"
-      store_template: "{date}.parquet"
+  db:
+    um:
+      path: "./data/weather/um"
+      # Coordinates on grid
+      store_template: "{date}_{coordinates_P5}_{coordinates_p5}"
+      store_file_extension: ".parquet"
 
-  grid: P5
-
-  time_format: "%Y-%m-%dT%H"
+  save_time_format: "%Y-%m-%d"
 
   models:
     um:
@@ -51,3 +51,4 @@ meteo:
   api:
     url: "https://api.meteo.pl/api/v1/model/{model}/grid/{grid}/coordinates/{coordinates}/field/{field}/level/_/date/{date}/forecast/"
     url_rowcol: "https://api.meteo.pl/api/v1/model/{model}/grid/{grid}/latlon2rowcol/{latlon}/"
+    time_format: "%Y-%m-%dT%H"

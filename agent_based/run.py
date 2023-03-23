@@ -7,7 +7,6 @@ import datetime
 from pytz import timezone
 import time
 
-
 def main():
     config_path = "./config/*.yml"
     config = load_config(config_path)
@@ -28,32 +27,32 @@ def main():
     logger.info("Loading data.")
     wind_df, pv_df, res_df = load_clean_res_data(config)
 
-    wind_df = wind_df.iloc[0:500]
-    pv_df = pv_df.iloc[0:500]
+    wind_df = wind_df.iloc[0:300]
+    pv_df = pv_df.iloc[0:300]
 
     logger.info("Creating model.")
 
     default_timezone = timezone(config.time.timezone)
 
-    starttime = datetime.datetime(2023, 3, 22, 0, 0)
+    starttime = datetime.datetime(2023, 3, 12, 0, 0)
     deltatime = datetime.timedelta(minutes=15)
 
     model = ModelV1(wind_df, pv_df, config, starttime=starttime, deltatime=deltatime)
 
     logger.info(f"Running code with scheduler: {config.computations.scheduler}")
     
-    # sttime = time.time()
-    # for i in range(4):
-    #     model.step()
-    # long = time.time() - sttime
+    sttime = time.time()
+    model.step()
+    long = time.time() - sttime
 
-    # logger.info(f"Scheduler: {config.computations.scheduler} took: {long} seconds.")
+    logger.info(f"Scheduler: {config.computations.scheduler} took: {long} seconds.")
 
-    # agent_power = model.datacollector.get_agent_vars_dataframe()
+    agent_power = model.datacollector.get_agent_vars_dataframe()
     
-    model.get_weather_pv(starttime, {"P5" : "212,259", "p5" : "212,259"})
+    logger.info("End of the calculations.")
     
-    print("END")
+    #print(agent_power)
+
 
 if __name__ == "__main__":
     main()

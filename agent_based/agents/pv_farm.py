@@ -71,10 +71,15 @@ class PVInstallation(mesa.Agent):
         self.model_chain = ModelChain(
             self.system, self.location, aoi_model="no_loss", spectral_model="no_loss"
         )
+        
+        self.results = dict()
 
     def step(self):
-        weather = self.model.get_weather_pv(self.model.time, self.coordinates)
+        weather = self.model.get_weather(self.model.time, self.coordinates)
 
         self.model_chain.run_model(weather)
 
-        self.power = self.model_chain.results.ac.iloc[0]
+        self.results[self.model.time] = self.model_chain.results
+        
+        self.power = self.model_chain.results.dc
+
