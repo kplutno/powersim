@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from pytz import timezone
 import time
 
+
 def main():
     config_path = "./config/*.yml"
     config = load_config(config_path)
@@ -42,7 +43,7 @@ def main():
     model = ModelV1(wind_df, pv_df, config, starttime=start_time, deltatime=deltatime)
 
     logger.info(f"Running code with scheduler: {config.computations.scheduler}")
-    
+
     sttime = time.time()
     for i in range(steps):
         model.step()
@@ -50,12 +51,9 @@ def main():
 
     logger.info(f"Scheduler: {config.computations.scheduler} took: {long} seconds.")
 
-    
     agent_power = model.datacollector.get_agent_vars_dataframe()
-    
+
     logger.info("End of the calculations.")
-    
-    #print(agent_power)
 
 
 if __name__ == "__main__":
