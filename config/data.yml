@@ -5,6 +5,11 @@ process:
   process_add_row_col: False
 
 data:
+  output:
+    path: "./data/output"
+    name_template: "{date}_{unique_id}"
+    format: ".parquet"
+  
   res_list:
     path: "./data/res-list.XLSX"
     columns_rename:

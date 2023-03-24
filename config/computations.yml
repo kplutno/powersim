@@ -1,12 +1,14 @@
 ---
 computations:
-  scheduler: random_sequential
-  number_of_processes: 4
-  backend: threads
+  scheduler: parallel
+  number_of_processes: 8
+  prefer: processes
+  pre_dispatch: all
+  verbose: 100
 
 time:
-  start_time: 2022-08-16T00
-  end_time: 2022-08-18T00
+  start_time: 2022-08-19T00
+  end_time: 2022-08-20T00
   format: "%Y-%m-%dT%H"
   timezone: "Europe/Warsaw"
   time_delta:

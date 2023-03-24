@@ -28,8 +28,8 @@ def main():
     logger.info("Loading data.")
     wind_df, pv_df, res_df = load_clean_res_data(config)
 
-    wind_df = wind_df.iloc[0:3]
-    pv_df = pv_df.iloc[0:3]
+    wind_df = wind_df.iloc[0:300]
+    pv_df = pv_df.iloc[0:300]
 
     logger.info("Creating model.")
 

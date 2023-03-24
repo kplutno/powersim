@@ -9,3 +9,7 @@ pv_panels:
 inverters:
   ABBMicro:
     name: "ABB__MICRO_0_25_I_OUTD_US_208__208V_"
+    max_power: 4000
+  ABB_6000:
+    name: "ABB__PVI_6000_OUTD_US_A__277V_"
+    max_power: 6000

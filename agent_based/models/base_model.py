@@ -43,7 +43,7 @@ class ModelV1(mesa.Model):
 
         # Choose the scheduler
         schedulers = {
-            "random_sequential": mesa.time.RandomActivation,
+            "sequential": mesa.time.RandomActivation,
             "parallel": SimpleMPScheduler,
         }
 
@@ -88,9 +88,12 @@ class ModelV1(mesa.Model):
         )
 
     def step(self):
-        self.logger.info(f"Starting computations for time {self.time}")
+        # Fetch all the weather data
+        self.logger.info(f"Weather fetch for time: {self.time}")
+        for agent in self.schedule.agent_buffer():
+            self.get_weather(self.time, agent.coordinates)
         
-        self.datacollector.collect(self)
+        self.logger.info(f"Starting computations for time: {self.time}")
         
         self.schedule.step()
         

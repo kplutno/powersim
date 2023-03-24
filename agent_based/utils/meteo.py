@@ -7,8 +7,8 @@ import pandas as pd
 
 
 def fetch_meteo_um_data(config, time, meteo_token, coordinates):
-    models: list = config.meteo.models
-    fields: list = config.meteo.fields.sun
+    model: list = "um"
+    fields: list = config.meteo.fields
     time_format: str = config.meteo.api.time_format
     date: str = time.strftime(time_format)
     url_template = config.meteo.api.url
@@ -19,18 +19,17 @@ def fetch_meteo_um_data(config, time, meteo_token, coordinates):
     weather = dict()
     times = dict()
 
-    for model, grids in models.items():
-        for key, field in fields.items():
-            url = url_template.format(
-                model=model,
-                grid=field.grid,
-                coordinates=coordinates[field.grid],
-                field=field.code,
-                date=date,
-            )
-            request = requests.post(url, headers=headers)
-            times[key] = request.json()["times"][:length_of_forecast]
-            weather[key] = request.json()["data"][:length_of_forecast]
+    for key, field in fields.items():
+        url = url_template.format(
+            model=model,
+            grid=field.grid,
+            coordinates=coordinates[field.grid],
+            field=field.code,
+            date=date,
+        )
+        request = requests.post(url, headers=headers)
+        times[key] = request.json()["times"][:length_of_forecast]
+        weather[key] = request.json()["data"][:length_of_forecast]
 
     # Calculate wind velocity - to use in PV, don't need vector, just length
     weather["wind_speed"] = [
@@ -56,7 +55,7 @@ def fetch_meteo_um_data(config, time, meteo_token, coordinates):
 
     pressure_df = (
         pressure_df.reindex(pressure_df.index.union(index))
-        .interpolate(config.meteo.fields.sun.pressure.interpolate_method)
+        .interpolate(config.meteo.fields.pressure.interpolate_method)
         .reindex(index)
     )
     pressure_df.columns = ["pressure"]

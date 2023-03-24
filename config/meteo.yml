@@ -19,35 +19,103 @@ meteo:
   # 480 * 15 min - 5 days
   length_of_forecast: 480
 
+  wind_constants:
+    roughness: 0.1
+  
   fields:
-    sun:
-      temp_air:
-        code: "03236_0000000"
-        grid: P5
-      u_10:
-        code: "03225_0000000"
-        grid: p5
-      v_10:
-        code: "03226_0000000"
-        grid: p5
-      pressure:
-        code: "16222_0000000"
-        grid: P5
-        interpolate_method: time
-      dni:
-        code: "01215_0000000"
-        grid: P5
-      dhi:
-        code: "01216_0000000"
-        grid: P5
-      ghi:
-        code: "01235_0000000"
-        grid: P5
-
-    wind:
-      - temp
-      - temp
-      - temp
+    temp_air:
+      code: "03236_0000000"
+      grid: P5
+      height: 1.5
+      wind_turbine: True
+    u_10:
+      code: "03225_0000000"
+      grid: p5
+      height: 10.0
+      wind_turbine: True
+    v_10:
+      code: "03226_0000000"
+      grid: p5
+      height: 10.0
+      wind_turbine: True
+    u_30:
+      code: "15284_0000000"
+      grid: p5
+      height: 30.0
+      wind_turbine: True
+    v_30:
+      code: "15285_0000000"
+      grid: p5
+      height: 30.0
+      wind_turbine: True
+    u_50:
+      code: "15212_0000000"
+      grid: p5
+      height: 50.0
+      wind_turbine: True
+    v_50:
+      code: "15213_0000000"
+      grid: p5
+      height: 50.0
+      wind_turbine: True
+    u_90:
+      code: "15286_0000000"
+      grid: p5
+      height: 90.0
+      wind_turbine: True
+    v_90:
+      code: "15287_0000000"
+      grid: p5
+      height: 90.0
+      wind_turbine: True
+    u_140:
+      code: "15288_0000000"
+      grid: p5
+      height: 140.0
+      wind_turbine: True
+    v_140:
+      code: "15289_0000000"
+      grid: p5
+      height: 140.0
+      wind_turbine: True
+    u_215:
+      code: "15290_0000000"
+      grid: p5
+      height: 215.0
+      wind_turbine: True
+    v_215:
+      code: "15291_0000000"
+      grid: p5
+      height: 215.0
+      wind_turbine: True
+    u_330:
+      code: "15292_0000000"
+      grid: p5
+      height: 330.0
+      wind_turbine: True
+    v_330:
+      code: "15293_0000000"
+      grid: p5
+      height: 330.0
+      wind_turbine: True
+    pressure:
+      code: "16222_0000000"
+      grid: P5
+      height: 0.0
+      wind_turbine: True
+      interpolate_method: time
+    dni:
+      code: "01215_0000000"
+      grid: P5
+      wind_turbine: False
+    dhi:
+      code: "01216_0000000"
+      grid: P5
+      wind_turbine: False
+    ghi:
+      code: "01235_0000000"
+      grid: P5
+      wind_turbine: False
   api:
     url: "https://api.meteo.pl/api/v1/model/{model}/grid/{grid}/coordinates/{coordinates}/field/{field}/level/_/date/{date}/forecast/"
     url_rowcol: "https://api.meteo.pl/api/v1/model/{model}/grid/{grid}/latlon2rowcol/{latlon}/"

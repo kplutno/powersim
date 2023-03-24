@@ -60,6 +60,7 @@ for location, weather in zip(coordinates, tmys):
     annual_energy = mc.results.ac
     energies[name] = annual_energy
 
+print(weather)
 
 energies = pd.Series(annual_energy)
 

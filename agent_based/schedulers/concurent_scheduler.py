@@ -8,12 +8,14 @@ class SimpleMPScheduler(mesa.time.BaseScheduler):
         super().__init__(model)
 
     def step(self) -> None:
-        ids = self._agents.keys()
+        number_of_tasks = self.get_agent_count()
+        batch_size = int(number_of_tasks // self.model.config.computations.number_of_processes) + 1
         results = Parallel(
             n_jobs=self.model.config.computations.number_of_processes,
-            prefer=self.model.config.computations.backend,
-            max_nbytes=1e6,
-            require="sharedmem"
+            prefer=self.model.config.computations.prefer,
+            pre_dispatch=self.model.config.computations.pre_dispatch,
+            batch_size=batch_size,
+            verbose=self.model.config.computations.verbose
         )(delayed(execute)(agent) for agent in self.agent_buffer(shuffled=True))
 
         self._agents = {agent.unique_id: agent for agent in results}

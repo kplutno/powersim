@@ -105,4 +105,6 @@ def read_yaml_file(filename):
             yml = yaml.load(f, Loader=FullLoader)
         except yaml.YAMLError as exc:
             print(exc)
+            raise ImportError("Yaml issue!")
+
     return yml
