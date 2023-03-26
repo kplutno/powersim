@@ -51,8 +51,6 @@ def main():
 
     logger.info(f"Scheduler: {config.computations.scheduler} took: {long} seconds.")
 
-    agent_power = model.datacollector.get_agent_vars_dataframe()
-
     logger.info("End of the calculations.")
 
 

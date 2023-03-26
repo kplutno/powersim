@@ -3,8 +3,10 @@ from windpowerlib import ModelChain, WindTurbine, create_power_curve
 import pandas as pd
 from math import sqrt
 import matplotlib.pyplot as plt
+from agent_based.agents.base_agent import BaseAgent
 
-class WindInstallation(mesa.Agent):
+
+class WindInstallation(BaseAgent):
     def __init__(
         self,
         unique_id: int,
@@ -17,13 +19,9 @@ class WindInstallation(mesa.Agent):
         P5: str,
         p5: str,
     ):
-        super().__init__(unique_id, model)
-        self.voivodeship = voivodeship
-        self.powiat = powiat
-        self.power = power
-        self.latitude = latitude
-        self.longitude = longitude
-        self.coordinates = {"P5": P5, "p5": p5}
+        super().__init__(
+            unique_id, model, voivodeship, powiat, power, latitude, longitude, P5, p5
+        )
 
         turbine = {
             "nominal_power": 3e6,  # in W
@@ -56,18 +54,19 @@ class WindInstallation(mesa.Agent):
 
         self.model_chain_turbine.run_model(weather)
 
-        self.turbine.power_output = self.model_chain_turbine.power_output      
-        
+        self.turbine.power_output = self.model_chain_turbine.power_output
+
         self.power = self.turbine.power_output
         
+        self.save_power()
+
         df = self.power.groupby([self.power.index.day, self.power.index.hour]).sum() * 4
-        
+
         df.plot()
 
         plt.savefig(f"./data/figures/{self.unique_id}.png")
 
         plt.close()
-        
 
     def get_wind_weather_data(self):
         weather = self.model.get_weather(self.model.time, self.coordinates)
@@ -76,21 +75,34 @@ class WindInstallation(mesa.Agent):
 
         # Create MultiIndex - windpowerlib uses it
         # Changing name from temp_air to temperature
-        variables = [column if column != "temp_air" else "temperature" for column in weather.columns]
-        heights = [field.height for field in self.model.config.meteo.fields.values() if field.wind_turbine]
-        
-        multi_index = [(variable, height) for variable, height in zip(variables, heights)]
-        multi_index = pd.MultiIndex.from_tuples(multi_index, names=["variable_name", "height"])
+        variables = [
+            column if column != "temp_air" else "temperature"
+            for column in weather.columns
+        ]
+        heights = [
+            field.height
+            for field in self.model.config.meteo.fields.values()
+            if field.wind_turbine
+        ]
+
+        multi_index = [
+            (variable, height) for variable, height in zip(variables, heights)
+        ]
+        multi_index = pd.MultiIndex.from_tuples(
+            multi_index, names=["variable_name", "height"]
+        )
         weather.columns = multi_index
-        
+
         # Calculate value of the wind speed
         for variable, height in weather.columns:
             if "u_" in variable:
                 u_name = "u_" + str(int(height))
                 v_name = "v_" + str(int(height))
-                calculate_speed = lambda row: sqrt(row[u_name]**2 + row[v_name]**2)
-                weather[("wind_speed", height)] = weather.apply(calculate_speed , axis=1)
+                calculate_speed = lambda row: sqrt(row[u_name] ** 2 + row[v_name] ** 2)
+                weather[("wind_speed", height)] = weather.apply(calculate_speed, axis=1)
 
-        weather[("roughness_length", 0)] = self.model.config.meteo.wind_constants.roughness
-        
+        weather[
+            ("roughness_length", 0)
+        ] = self.model.config.meteo.wind_constants.roughness
+
         return weather

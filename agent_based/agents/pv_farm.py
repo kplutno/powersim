@@ -11,9 +11,10 @@ from pvlib.temperature import TEMPERATURE_MODEL_PARAMETERS
 from pvlib.modelchain import ModelChain
 import matplotlib.pyplot as plt
 import pandas as pd
+from agent_based.agents.base_agent import BaseAgent
 
 
-class PVInstallation(mesa.Agent):
+class PVInstallation(BaseAgent):
     modules_database = retrieve_sam("CECMod")
     cec_inverters = retrieve_sam("cecinverter")
     # modules_database.to_csv("./data/CECMod.csv")
@@ -32,30 +33,28 @@ class PVInstallation(mesa.Agent):
         altitude: float = 0.0,
         timezone: str = "Europe/Warsaw",
     ):
-        super().__init__(unique_id, model)
-        self.logger = logging.getLogger(__name__)
+        super().__init__(
+            unique_id,
+            model,
+            voivodeship,
+            powiat,
+            power,
+            latitude,
+            longitude,
+            P5,
+            p5,
+            altitude,
+            timezone,
+        )
 
-        self.voivodeship = voivodeship
-        self.powiat = powiat
-
-        # Power in Watts (Watt-Peaks)
-        self.max_power = power * 1e6
-        self.latitude = float(latitude)
-        self.longitude = float(longitude)
-        self.altitude = float(altitude)
-        self.timezone = timezone
-        self.coordinates = {"P5": P5, "p5": p5}
-        
-        self.power = None
-        
         module = self.model.config.pv_panels.Ablytek290
         module_name = module.name
         module_power = module.power_point
-        
+
         inverter = self.model.config.inverters.ABB_6000
         inverter_name = inverter.name
         inverter_power = inverter.max_power
-        
+
         module = self.modules_database[module_name]
         inverter = self.cec_inverters[inverter_name]
 
@@ -63,14 +62,13 @@ class PVInstallation(mesa.Agent):
             "open_rack_glass_glass"
         ]
 
-
         number_of_modules = int((self.max_power // module_power) + 1)
 
         number_od_inverters = int((self.max_power // inverter_power) + 1)
-        
+
         number_of_strings = number_od_inverters
         modules_per_string = int(number_of_modules // number_of_strings + 1)
-        
+
         mount = FixedMount(surface_tilt=self.latitude, surface_azimuth=180)
 
         pv_arrays = [
@@ -79,7 +77,7 @@ class PVInstallation(mesa.Agent):
                 module_parameters=module,
                 temperature_model_parameters=temperature_model_parameters,
                 modules_per_string=modules_per_string,
-                strings=number_of_strings
+                strings=number_of_strings,
             ),
         ]
 
@@ -95,7 +93,7 @@ class PVInstallation(mesa.Agent):
 
     def step(self):
         weather = self.model.get_weather(self.model.time, self.coordinates)
-        
+
         # Convert from Kelvins to Celsius
         weather["temp_air"] = weather["temp_air"] - 273.15
 
@@ -105,9 +103,11 @@ class PVInstallation(mesa.Agent):
 
         self.power = self.model_chain.results.ac
 
+        self.save_power()
+
         # Times 4, because freq is 15 minutes, and we want to have Wh
         df = self.power.groupby([self.power.index.day, self.power.index.hour]).sum() * 4
-        
+
         df.plot()
 
         plt.savefig(f"./data/figures/{self.unique_id}.png")
